@@ -13,6 +13,12 @@ def getnames(obj):
     except IndexError:
         return 'null'
 
+def getsubkey(obj, parent, key):
+    try:
+        return obj[parent].get(key, 'null')
+    except KeyError:
+        return 'null'
+
 while True:
     print (offset)
     response = requests.get(api_url + f"&offset={offset}" + f"&limit={limit}")
@@ -25,11 +31,11 @@ while True:
         'id': entryid,
         'id_submission': i.get('id_submission', 'null'),
         'name': getnames(i),
-        'addressA': i['addressentity'].get('address_line_1', 'null'),
-        'addressB': i['addressentity'].get('address_line_2', 'null'),
-        'city': i['addressentity'].get('city', 'null'),
-        'state': i['addressentity'].get('state', 'null'),
-        'zip': i['addressentity'].get('zip_code', 'null'),
+        'addressA': getsubkey(i, 'addressentity', 'address_line_1'),
+        'addressB': getsubkey(i, 'addressentity', 'address_line_2'),
+        'city': getsubkey(i, 'addressentity', 'city'),
+        'state': getsubkey(i, 'addressentity', 'state'),
+        'zip': getsubkey(i, 'addressentity', 'zip_code'),
         'comment_text': i.get('text_data', 'null'),
         'email': i.get('contact_email', 'null'),
         'submission_date': i.get('date_submission', 'null'),
