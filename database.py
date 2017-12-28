@@ -5,7 +5,7 @@ conn = mysql.connector.Connect(host=db_host,user=db_user,password=db_password,da
 cursor = conn.cursor(buffered=True)
 
 DB_INIT = ('CREATE TABLE IF NOT EXISTS filings( '
-    'id INT,'
+    'id INTEGER NOT NULL AUTO_INCREMENT,'
     'id_submission TEXT,'
     'name TEXT,'
     'addressA TEXT,'
@@ -16,13 +16,16 @@ DB_INIT = ('CREATE TABLE IF NOT EXISTS filings( '
     'comment_text LONGTEXT,'
     'email TEXT,'
     'submission_date TEXT,'
-    'dissemination_date TEXT)')
+    'dissemination_date TEXT,'
+    'PRIMARY KEY (id),'
+    'FULLTEXT idx (name))'
+    'ENGINE=InnoDB;')
 
-DB_HIGHEST = ('SELECT id FROM filings ORDER BY id DESC LIMIT 1')
+DB_HIGHEST = ('SELECT id FROM filings ORDER BY id DESC LIMIT 1;')
 
 DB_ENTRY = ("INSERT INTO filings "
-           "(id, id_submission, name, addressA, addressB, city, state, zip, comment_text, email, submission_date, dissemination_date)"
-           "VALUES (%(id)s, %(id_submission)s, %(name)s, %(addressA)s, %(addressB)s, %(city)s, %(state)s, %(zip)s, %(comment_text)s, %(email)s, %(submission_date)s, %(dissemination_date)s)")
+           "(id_submission, name, addressA, addressB, city, state, zip, comment_text, email, submission_date, dissemination_date)"
+           "VALUES (%(id_submission)s, %(name)s, %(addressA)s, %(addressB)s, %(city)s, %(state)s, %(zip)s, %(comment_text)s, %(email)s, %(submission_date)s, %(dissemination_date)s)")
 
 def init():
     cursor.execute(DB_INIT)
